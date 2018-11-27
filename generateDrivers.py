@@ -13,7 +13,7 @@ for i in range(0, n):
     driver = []                                             #Pusta lista gdzie przechowujemy dane o generowanym kierowcy
     driver.append("K%d" % i)
     if i < 3:
-        driver.append("1")                                  #Typ zatrudnienia kierowcy 1-etat, 0-dorywczy
+        driver.append('1')                                  #Typ zatrudnienia kierowcy 1-etat, 0-dorywczy
     else:
         driver.append('0')
     driver.append(str(salary))
@@ -28,5 +28,4 @@ for i in range(0, n):
 
     driverStr = "\t\t".join(driver)                         #Zmiana listy na string
     with open(path,'a') as file:
-        file.write(driverStr + '\n')
-        file.write('\n')
+        file.write(driverStr  + '\n')
