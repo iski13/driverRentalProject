@@ -1,4 +1,4 @@
-import random, os, Driver, Task, Place
+import random, os, Driver,Place, Task
 
 #-----------------------------------------------
 #Wczytanie z pliku do listy obiektow typu Driver
@@ -56,4 +56,9 @@ for i in range(0,len(courses)):
 #for i in s:
 #    h,m,t,d = s.split(' ')
 
-print(s)
+#print(s)
+
+#with open(path2) as f:
+#    data = f.readlines()
+
+#print(''.join(data))
