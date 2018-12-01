@@ -1,11 +1,16 @@
-import datetime
+import datetime, Place
 
 class Task():
 
-    def __init__(self, start_time = time(18,0), tasktype = 1, dest = Place()):            #Inicjalizacja zadania
-        self.start_time = start_time
+    def __init__(self, start_timeH=18, start_timeM=0, tasktype = 1, dest = 0):            #Inicjalizacja zadania
+        self.start_time = datetime.time(int(start_timeH), int(start_timeM))
         self.tasktype = tasktype
-        self.dest = dest
+        self.dest = Place.Place(dest)
+
+    def __init__(self, data):                                                             #Inicjalizacja zadania przez listę danych
+        self.start_time = datetime.time(int(data[0]), int(data[1]))
+        self.tasktype = data[2]
+        self.dest = Place.Place(data[3])
 
     def show(self):                                                                 #Prezentacja zadania
         if self.tasktype==1:
@@ -15,9 +20,3 @@ class Task():
 
 
 #Testy
-
-#p = Place('Zoo',25,75,time(1,5),time(2,4))
-#a = Task(time(17,45), 0, p)
-#a.show()
-#a = Task(time(13,43))
-#a.show()
