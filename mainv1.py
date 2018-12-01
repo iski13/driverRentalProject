@@ -45,8 +45,11 @@ for i in range(0,len(courses)):
     print(courses[i])
     # listOfTasks.append(Task.Task(courses[i][0], courses[i][1], courses[i][2], courses[i][3]))         #Inicjalizacja zadania osobnymi danymi
     listOfTasks.append(Task.Task(courses[i]))                                                           #Inicjalizacja z listy
-    listOfTasks[i].show()
+    print(listOfTasks[i])
 file2.close()
+listOfTasks.sort()
+for i in range(0, len(listOfTasks)):
+    listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
 
 #courses[i] = courses[i].split("\t\t")
 #    courses[i][0] = courses[i][0].split(":")
