@@ -1,38 +1,24 @@
 import math
-import datetime
 
 class Place:
-    def __init__(self, name = 'Lotnisko',x = 0, y = 0, car_time = time(1,0), bus_time = time(1,30)):  #Inicjalizacja nowej lokalizacji
-        self.name = name
-        self.x = x
-        self.y = y
-        self.car_time = car_time
-        self.bus_time = bus_time
 
-    def dist(self, p1 = Place):                                                     #Obliczanie odleglosci
-        return math.sqrt(abs(self.x-p1.x)**2+abs(self.y-p1.y)**2)
+    def __init__(self, spotnumber = "1"):                                               #Inicjalizacja nowej lokalizacji
 
-    def show(self):                                                                 #Prezentacja lokalizacji
-        print("Do",self.name,"jest:")
-        print("Samochodem:\t",self.car_time)
-        print("Autobusem:\t",self.bus_time)
-        if self.car_time < self.bus_time:
-            return print("Szybciej będzie samochodem")
-        elif self.car_time > self.bus_time:
-            return print("Jedz autobusem")
-        else:
-            return print("Twoj wybor!")
+        spotName = {"1": "Baza", "2": "Spot1", "3": "Spot2", "4": "Spot3", "5": "Spot4"}
+        spotCoordinates = {"1": [0, 0], "2": [7, 3], "3": [-4, 0], "4": [6, -2], "5": [8, 2]}
 
-    def show_dist(self, p = Place):                                                 #Wyswietlenie odleglosci
-        return print("Między ",self.name," a ", p.name,"jest ", self.dist(p)," km.")
+        self.name = spotName[spotnumber]
+        self.x = spotCoordinates[spotnumber][0]
+        self.y = spotCoordinates[spotnumber][1]
+
+    def dist(self, other):                                                              #Obliczanie odleglosci
+        return math.sqrt(abs(self.x-other.x)**2+abs(self.y-other.y)**2)
+
+    def show(self):                                                                     #Prezentacja lokalizacji
+        print("Jesteś w %s o współrzędnych x = %d oraz y = %d" %(self.name, self.x, self.y))
+
+    def show_dist(self, other):                                                         #Wyswietlenie odleglosci
+        return print("Między ",self.name," a ", other.name,"jest ", self.dist(other)," km.")
 
 #Testy:
 
-#p = Place('Lotnisko',20,20)
-#q = Place('Dworzec',30,30)
-#print(p.dist(q))
-#p.show()
-#p.show_dist(q)
-#p.bus_time = time(0,25)
-#p.show()
-#p.show_dist(q)
