@@ -11,10 +11,11 @@ class Driver():
         self.shift = str(shift)
         self.work_time = int(work_time)
         self.ifextras = bool(ifextras)
-        self.position = Place.Place()
+        self.position = Place.Place(0)
         self.tasks = []
+        self.available = True
 
-    def __init__(self, data):               # Inicjalizacja tabelą
+    def __init__(self, data):                                                       # Inicjalizacja tabelą
         self.id = str(data[0])
         self.fulltimer = int(data[1])
         self.salary = int(data[2])
@@ -22,11 +23,12 @@ class Driver():
         self.shift = str(data[4])
         self.work_time = int(data[5])
         self.ifextras = int(data[6])
-        self.position = Place.Place()
+        self.position = Place.Place(0)
         self.tasks = []
+        self.available = True
 
 
-#    def is_fulltimer(self):                                                        #Sprawdzanie etatu
+#    def is_fulltimer(self):                                                        # Sprawdzanie etatu
 #        if self.fulltimer == True:
 #            return True
 #        else:
@@ -50,8 +52,19 @@ class Driver():
             self.tasks[i].show()
             print("\n")
 
+#----------
+# Operatory
+#----------
+    def __eq__(self, other):
+        if self.id == other.id:
+            return True
+        else:
+            return False
 
+
+#-----
 #Testy
+#-----
 
 #a = Driver()
 #a.show()

@@ -1,4 +1,4 @@
-import random, os, Driver, Place, Task
+import random, os, Driver, Place, Task, Assignment
 
 TABU = []
 
@@ -9,8 +9,6 @@ path1 = os.getcwd()
 path1 = os.path.join(path1, 'drivers.txt')
 
 listOfWorkers = []
-
-
 
 file1 = open(path1,'r')
 drivers = file1.read()
@@ -50,14 +48,64 @@ file2.close()
 listOfTasks.sort()
 
 
-#for i in range(0, len(listOfTasks)-1):
-#    listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
-
 for i in range(0, len(listOfTasks)-1):
-        if listOfTasks[i].dest == listOfTasks[i+1].dest:
-            listOfTasks.append(listOfTasks[i] + listOfTasks[i+1])
-            listOfTasks.remove(listOfTasks[i])
-            listOfTasks.remove(listOfTasks[i+1])
+    listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
+
+#for i in range(0, len(listOfTasks)-1):
+#    for j in range(i+1, len(listOfTasks)-1):
+#        if listOfTasks[i].dest == listOfTasks[j].dest:
+#            listOfTasks.append(listOfTasks[i] + listOfTasks[j])
+#            listOfTasks.remove(listOfTasks[i])
+#            listOfTasks.remove(listOfTasks[j])
 
 for i in range(0, len(listOfTasks)-1):
     Task.Task.show(listOfTasks[i])
+
+
+#----------------------------
+#Komunikacja z użytkownikiem:
+#----------------------------
+
+start = 0
+stop = int(input("Podaj liczbe operacji (w minutach): "))
+available = [] #Lista dostepnych w danej chwili
+assigned = []
+
+#Petla sterujaca
+while start != stop:
+
+#Zdejmowanie z listy TABU
+    for i in TABU:
+        TABU[i].susp_time = TABU[i].susp_time - 1
+        if TABU[i].susp_time == 0:
+            TABU.remove(TABU[i])
+
+
+
+#Wybieranie jednej z mozliwosci
+
+
+
+#Sprawdzanie mozliwosci
+
+for j in listOfTasks:
+    for i in listOfWorkers:
+        if listOfWorkers[i].position == 0:
+            available.append(listOfWorkers[i])
+        else:
+            continue
+    num = random.randint(0,len(available))
+    a = Assignment(available[num], listOfTasks[j],135)
+    a.driver.available = False
+    assigned.append(a)
+
+
+
+
+#Wpisaywanie nowych elementow na liste TABU
+
+
+
+    start = start + 1
+
+print(assigned)
