@@ -1,12 +1,16 @@
 import Driver, Task, datetime
 
+std_velocity = 60
 
 class Assignment():
 
-    def __init__(self, driver, task, nes_time=120):
+    def __init__(self, driver, task, nes_time):
         self.driver = driver
         self.task = task
-        self.nes_time = nes_time
+        if nes_time:
+            self.nes_time = nes_time
+        else:
+            self.nes_time = (task.dest.dist(driver)/std_velocity)*2 + task.duration
         self.allowed = True
 
 #    def __init__(self, other):

@@ -2,6 +2,12 @@ import random, os, Driver, Place, Task, Assignment
 
 TABU = []
 
+def goal_function(assignments):
+    result = 0
+    for ass in assignments:
+        result = result + (ass.nes_time / 60)*ass.driver.salary
+    return result
+
 #-----------------------------------------------
 #Wczytanie z pliku do listy obiektow typu Driver
 
@@ -17,8 +23,8 @@ del drivers[len(drivers)-1]
 for i in range(0,len(drivers)):
     drivers[i] = drivers[i].split("\t\t")
     # listOfWorkers.append(Driver.Driver(drivers[i][0], drivers[i][1], drivers[i][2],
-    #                                   drivers[i][3], drivers[i][4], drivers[i][5], drivers[i][6]))   #Zamiennie działające inicjalizacje
-    listOfWorkers.append(Driver.Driver(drivers[i]))                                                    #listą lub pojedynczymi argumentami
+    #                                   drivers[i][3], drivers[i][4], drivers[i][5], drivers[i][6]))   #Zamiennie dzialajace inicjalizacje
+    listOfWorkers.append(Driver.Driver(drivers[i]))                                                    #lista lub pojedynczymi argumentami
     listOfWorkers[i].show()
 
 file1.close()
@@ -49,7 +55,7 @@ listOfTasks.sort()
 
 
 for i in range(0, len(listOfTasks)-1):
-    listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
+    listOfTasks[i].show()                                   #Sortowanie zlecen wedlug godziny
 
 #for i in range(0, len(listOfTasks)-1):
 #    for j in range(i+1, len(listOfTasks)-1):
@@ -63,7 +69,7 @@ for i in range(0, len(listOfTasks)-1):
 
 
 #----------------------------
-#Komunikacja z użytkownikiem:
+#Komunikacja z uzytkownikiem:
 #----------------------------
 
 start = 0
@@ -78,6 +84,7 @@ while start != stop:
     for i in TABU:
         TABU[i].susp_time = TABU[i].susp_time - 1
         if TABU[i].susp_time == 0:
+
             TABU.remove(TABU[i])
 
 
@@ -94,6 +101,7 @@ for j in listOfTasks:
             available.append(listOfWorkers[i])
         else:
             continue
+while len(available) > 0:
     num = random.randint(0,len(available))
     a = Assignment(available[num], listOfTasks[j],135)
     a.driver.available = False
@@ -103,9 +111,16 @@ for j in listOfTasks:
 
 
 #Wpisaywanie nowych elementow na liste TABU
+    if goal_function(assigned) < goal_function(assigned_old):
+        TABU.append(assigned_old)
+        assigned_old = assigned
+    else:
+        TABU.append(assigned)
 
 
 
     start = start + 1
 
 print(assigned)
+
+

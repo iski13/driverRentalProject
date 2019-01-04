@@ -44,9 +44,9 @@ class Driver():
             print("Pracuje od", self.shift,'za\t')
         print(self.salary,"zl [ extra = ",self.extra_salary,"zl ]\t")
         if(self.ifextras==1):
-            print("Nadgodziny możliwe")
+            print("Nadgodziny mozliwe\t")
         else:
-            print("-")
+            print("-\t")
         print("Zlecenia:\n")
         for i in range(0,len(self.tasks)):
             self.tasks[i].show()
