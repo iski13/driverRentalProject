@@ -31,3 +31,5 @@ def generateDrivers():
         with open(path,'a') as file:
             file.write(driverStr  + '\n')
     return
+
+generateDrivers()
