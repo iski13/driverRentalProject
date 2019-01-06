@@ -1,100 +1,101 @@
-import os,math,
-class Place:
-    def __init__(self, wspX=0, wspY=0):
-        self.wspX = wspX
-        self.wspY = wspY
+import os, Driver, Place, Task, Assignment
+from generateDrivers import generateDrivers
+from generateTasks import generateTasks
 
-    def show(self):
-        print("Współrzędne zlecenia to %d oraz %d" %(self.wspX, self.wspY))
-    def dist(self, p1):                                                     #Obliczanie odleglosci
-        return math.sqrt(abs(self.x-p1.x)**2+abs(self.y-p1.y)**2)
-
-
-
-
-
-
-class Task():
-
-    def __init__(self, start_time = datetime.time(18,0), tasktype = 1, dest = Place()):            #Inicjalizacja zadania
-        self.start_time = start_time
-        self.tasktype = tasktype
-        self.dest = dest
-
-    def show(self):                                                                 #Prezentacja zadania
-        if self.tasktype==1:
-            return print("Dostarczenie na\t",self.start_time,"\tz\t",self.dest.name)
-        else:
-            return print("Odebranie o\t\t",self.start_time,"\tz\t",self.dest.name)
-
-
-
-availablePoints = {'1': [0, 0], '2': [7,3], '3': [-4, 0], '4': [6, -2], '5': [8, 2]}
-iteration = 0
-STOP = int(input("Podaj liczbę iteracji: "))
-# czasRealizacjiZlecenia???
-
-
-
-
+#Generacja kierowców i zadań
+# generateDrivers()
+# generateTasks()
 
 #-----------------------------------------------
 #Wczytanie z pliku do listy obiektow typu Driver
 
+path1 = os.getcwd()
+path1 = os.path.join(path1, 'drivers.txt')
+listOfWorkers = []
 
-path = os.getcwd()
-path = os.path.join(path, 'drivers.txt')
-workers = []
-
-file = open(path,'r')
-drivers = file.read()
+file1 = open(path1,'r')
+drivers = file1.read()
 drivers = drivers.split("\n")
 del drivers[len(drivers)-1]
 #print(drivers)
 for i in range(0,len(drivers)):
     drivers[i] = drivers[i].split("\t\t")
+    print(drivers[i])
+    # listOfWorkers.append(Driver.Driver(drivers[i][0], drivers[i][1], drivers[i][2],
+    #                                   drivers[i][3], drivers[i][4], drivers[i][5], drivers[i][6]))   #Zamiennie działające inicjalizacje
+    listOfWorkers.append(Driver.Driver(drivers[i]))                                                    #listą lub pojedynczymi argumentami
+    listOfWorkers[i].show()
 
-
-
-
+file1.close()
 
 
 #-----------------------------------------------
 #Wczytywanie z pliku do listy obiektow typu Task
 
-tasks = []
+listOfTasks = []
 courses = []
 s = []
 
 path2 = os.getcwd()
 path2 = os.path.join(path2, 'tasks.txt')
-file = open(path2,'r')
-courses = file.read()
+file2 = open(path2,'r')
+courses = file2.read()
 courses = courses.split("\n")
 del courses[len(courses)-1]
 for i in range(0,len(courses)):
-    courses[i] = courses[i].replace(":"," ")
-    s.append(''.join(courses[i]))
-    s[i] = s[i].replace("\t\t"," ")
-    s[i] = s[i].split(' ')
+
+    courses[i] = courses[i].replace(":", " ")
+    courses[i] = courses[i].replace("\t\t"," ")
+    courses[i] = courses[i].split(" ")
+    #print(courses[i])
+    # listOfTasks.append(Task.Task(courses[i][0], courses[i][1], courses[i][2], courses[i][3]))         #Inicjalizacja zadania osobnymi danymi
+    listOfTasks.append(Task.Task(courses[i]))                                                           #Inicjalizacja z listy
+    #print(listOfTasks[i])
+file2.close()
+listOfTasks.sort()
+for i in range(0, len(listOfTasks)):
+    listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
+
+#------------------------------------------------------
+#ALGORYTM
+
+round = 0
+STOP = 1
+tabooList1 = []     #Lista zabronień kierowców
+tabooList2 = []     #Lista zabronień przypisań
+tabooList3 = []     #Lista zabronień kombinacji przypisań
+availableDrivers = []
+listOfAssignments = []
+
+while round != STOP :
+
+    for hour in range (8, 24):
+        for minute in range (0,60):
+
+            print(hour,minute)
 
 
-print(s)
-
-points = []
-
-x0=[]
-
-for place in s:
-    points.append(Place(availablePoints[place[3]][0], availablePoints[place[3]][1]))
-i=0
-for eses in s:
-    if i==len(drivers):
-        i=0
-    x0.append(drivers[i][0])
-    i+=1
-print(x0)                               #Rozwiązanie startowe
+            for driver in listOfWorkers:
+                if driver.shiftH == hour and driver.shiftM == minute :
+                    availableDrivers.append(driver)
+                    #driver.show()
+                if driver.shiftH+driver.work_time == hour and driver.shiftM == minute+1 :
+                    availableDrivers.remove(driver)
+                    #driver.show()
 
 
-while iteration!=STOP:
+            for task in listOfTasks :
+                if task.start_time.hour == hour and task.start_time.minute == minute :
+                    task.show()
+                    minDistance = 10**6
+                    for driver in availableDrivers :
+                        if driver.position.dist(task.dest) < minDistance :
+                            minDistance = driver.position.dist(task.dest)
+                            selected = driver
+                    listOfAssignments.append(Assignment.Assignment(selected,task))
+                    #listOfAssignments[len(listOfAssignments)-1].show()
 
+
+
+    availableDrivers.clear()
+    round+=1

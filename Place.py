@@ -13,7 +13,7 @@ class Place:
         self.y = spotCoordinates[spotnumber][1]
 
     def dist(self, other):                                                     #Obliczanie odleglosci
-        return math.sqrt(abs(self.x-other.x)**2+abs(self.y-other.y)**2)
+        return math.sqrt((self.x-other.x)**2+(self.y-other.y)**2)
 
     def show(self):                                                                 #Prezentacja lokalizacji
         print("Jesteś w %s o współrzędnych x = %d oraz y = %d" %(self.name, self.x, self.y))
