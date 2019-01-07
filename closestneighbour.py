@@ -1,10 +1,11 @@
-import os, Driver, Place, Task, Assignment
+import os, Driver, Place, Task, Assignment, datetime
 from generateDrivers import generateDrivers
 from generateTasks import generateTasks
+from mergeTasks import mergeTasks
 
 #Generacja kierowców i zadań
-# generateDrivers()
-# generateTasks()
+generateDrivers()
+generateTasks()
 
 #-----------------------------------------------
 #Wczytanie z pliku do listy obiektow typu Driver
@@ -56,46 +57,113 @@ listOfTasks.sort()
 for i in range(0, len(listOfTasks)):
     listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
 
+#Laczenie taskow
+mergeTasks()
+
+
 #------------------------------------------------------
 #ALGORYTM
 
 round = 0
 STOP = 1
-tabooList1 = []     #Lista zabronień kierowców
-tabooList2 = []     #Lista zabronień przypisań
-tabooList3 = []     #Lista zabronień kombinacji przypisań
-availableDrivers = []
-listOfAssignments = []
+tabooList1 = []             #Lista zabronień kierowców
+tabooDriver = []            #Pomocnicza^^^
+tabooList2 = []             #Lista zabronień przypisań
+tabooList3 = []             #Lista zabronień kombinacji przypisań
+availableDriversTime = []   #Lista dostępnych kierowców według grafiku
+availableDriversReal = []   #Lista dostępnych kierowców według zabronień
+listOfAssignments = []      #Lista przypisań
+listOfArrivalTimes = []
+
 
 while round != STOP :
 
     for hour in range (8, 24):
         for minute in range (0,60):
 
-            #print(hour,minute)
+            print(hour,minute)
 
+            for driver in tabooList1 :
+                driver[1]-=1
+                if driver[1] == 0 :
+                    tabooList1.remove(driver)
+                    tabooDriver.remove(driver[0])
 
             for driver in listOfWorkers:
                 if driver.shiftH == hour and driver.shiftM == minute :
-                    availableDrivers.append(driver)
-                    #driver.show()
-                if driver.shiftH+driver.work_time == hour and driver.shiftM == minute+1 :
-                    availableDrivers.remove(driver)
-                    #driver.show()
+                    availableDriversTime.append(driver)
+                    availableDriversReal.append(driver)
+                    print("Zaczyna")
+
+                # if (driver in tabooDriver) and (driver in availableDriversReal) :
+                #     availableDriversReal.remove(driver)
+                #     print("zabroniony")
+
+                if (driver in tabooDriver)==False and (driver in availableDriversTime) and (driver in availableDriversReal)==False :
+                    availableDriversReal.append(driver)
+                    print("Odzabroniony")
+
+                if ((driver.shiftH+driver.work_time == hour) and (driver.shiftM == minute)) and (driver in availableDriversTime) :
+                    availableDriversTime.remove(driver)
+                    if driver in availableDriversReal :
+                        availableDriversReal.remove(driver)
+                    print("zakonczyl")
+
 
 
             for task in listOfTasks :
-                if task.start_time.hour == hour and task.start_time.minute == minute :
-                    task.show()
+                minutes = int(task.dest.dist(Place.Place("1")) / Assignment.std_velocity*60)    #Czas dojazdu od bazy
+
+                if task.start_time.minute - minutes < 0 :                                       #Deklaracja rzeczywistej godziny rozpoczęcia
+                    taskStart = datetime.time(task.start_time.hour-1, 59+task.start_time.minute - minutes)
+                else:
+                    taskStart = datetime.time(task.start_time.hour,task.start_time.minute-minutes)
+
+                if taskStart.hour == hour and taskStart.minute == minute:
+                    # task.show()
                     minDistance = 10**6
-                    for driver in availableDrivers :
-                        if driver.position.dist(task.dest) < minDistance :
-                            minDistance = driver.position.dist(task.dest)
-                            selected = driver
+                    if availableDriversReal:
+                        for driver in availableDriversReal:
+                            if driver.position.dist(task.dest) < minDistance :
+                                minDistance = driver.position.dist(task.dest)
+                                selected = driver
+                    else:
+                        selected = Driver.Driver()
+
                     listOfAssignments.append(Assignment.Assignment(selected,task))
+
+                    # if task.tasktype == 1 :
+                    #     tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].arrivalTime) + 15])
+                    #     tabooDriver.append(selected)
+                    #     availableDriversReal.remove(selected)
+                    #     selected.position = task.dest
+                    # else:
+                    if selected.id != "K!":
+                        tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].nes_time)])
+                        tabooDriver.append(selected)
+                        availableDriversReal.remove(selected)
+                        selected.position = Place.Place(str(1))     #Po każdym zleceniu powrót do bazy!!! (uproszczenie)
+                    # else:
+
+
                     listOfAssignments[len(listOfAssignments)-1].show()
 
 
+    tabooList3.append(listOfAssignments)
 
-    availableDrivers.clear()
+    result = 3*8*listOfWorkers[0].salary
+    for assignment in listOfAssignments :
+        if assignment.driver.fulltimer == 0 :
+            result = result + assignment.nes_time/60 * assignment.driver.salary
+        if assignment.driver.id=="K!" :
+            result = result + assignment.nes_time/60 *assignment.driver.salary
+        # else :
+
+    print(result)
+
+
+    availableDriversTime.clear()
+    availableDriversReal.clear()
+    listOfAssignments.clear()
+
     round+=1

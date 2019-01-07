@@ -32,6 +32,6 @@ def generateDrivers():
             with open(path,'a') as file:
                 file.write(driverStr  + '\n')
                 file.close()
-        else:
-            print("Plik zostal juz wygenerowany!\n")
+    else:
+        print("Plik zostal juz wygenerowany!\n")
     return

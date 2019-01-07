@@ -34,7 +34,7 @@ def mergeTasks():
         for i in range(0, len(listOfTasks)):
             for j in range(0, len(listOfTasks)):
                 if (listOfTasks[i].tasktype != listOfTasks[j].tasktype) and listOfTasks[i].dest == listOfTasks[j].dest and (listOfTasks[j].start_time - listOfTasks[i].start_time) <  01.00 and (listOfTasks[j].start_time - listOfTasks[i].start_time) > 00.15 and i != j :
-                    new_task = Task(listOfTasks[i].start_time.hour, listOfTasks[i].start_time.minutes, 2, listOfTasks[i].dest ,(listOfTasks[i].duration + listOfTasks[j].duration + (listOfTasks[j].start_time - listOfTasks[i].start_time)))
+                    new_task = Task(listOfTasks[i].start_time.hour, listOfTasks[i].start_time.minutes, 2, listOfTasks[i].dest)
                     merged.append(new_task)
                     del listOfTasks[i]
                     del listOfTasks[j]

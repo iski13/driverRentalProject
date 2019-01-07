@@ -16,7 +16,7 @@ def generateTasks():
             taskStr = "\t\t".join(task)
 
             file.write(taskStr + "\n")
-            file.close()
+        file.close()
     else:
         print("Plik zostal juz wygenerowany!\n")
     return
