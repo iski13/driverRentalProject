@@ -61,7 +61,7 @@ for i in range(0, len(listOfTasks)):
 
 round = 0
 STOP = 1
-tabooList1 = []     #Lista zabronień kierowców
+tabooList1 = []    #Lista zabronień kierowców
 tabooList2 = []     #Lista zabronień przypisań
 tabooList3 = []     #Lista zabronień kombinacji przypisań
 availableDrivers = []
@@ -74,26 +74,41 @@ while round != STOP :
 
             print(hour,minute)
 
+            for driver in tabooList1 :
+                driver[1]-=1
+                if driver[1] == 0 :
+                    tabooList1.remove(driver)
 
             for driver in listOfWorkers:
                 if driver.shiftH == hour and driver.shiftM == minute :
                     availableDrivers.append(driver)
-                    #driver.show()
-                if driver.shiftH+driver.work_time == hour and driver.shiftM == minute+1 :
+                    # driver.show()
+                if driver.shiftH+driver.work_time == hour and driver.shiftM+1 == minute :
                     availableDrivers.remove(driver)
-                    #driver.show()
+                    # driver.show()
 
 
             for task in listOfTasks :
                 if task.start_time.hour == hour and task.start_time.minute == minute :
-                    task.show()
+                    # task.show()
                     minDistance = 10**6
+
                     for driver in availableDrivers :
                         if driver.position.dist(task.dest) < minDistance :
                             minDistance = driver.position.dist(task.dest)
                             selected = driver
+
                     listOfAssignments.append(Assignment.Assignment(selected,task))
-                    #listOfAssignments[len(listOfAssignments)-1].show()
+
+                    if task.tasktype == 1 :
+                        tabooList1.append([selected, int((listOfAssignments[len(listOfAssignments)-1].nes_time-15)/2) + 15])
+                        selected.position = task.dest
+                    else:
+                        tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].nes_time)])
+                        selected.position = Place.Place(str(1))
+
+                    listOfAssignments[len(listOfAssignments)-1].show()
+
 
 
 

@@ -1,12 +1,13 @@
 import Driver, Task, datetime
 taskDuration = 15
-std_velocity = 35
+std_velocity = 30
 
 class Assignment():
 
     def __init__(self, driver, task):
         self.driver = driver
         self.task = task
+        self.distance = driver.position.dist(task.dest)
         self.nes_time = ((driver.position.dist(task.dest)/std_velocity)*2)*60 + taskDuration
         self.allowed = True
 
@@ -57,7 +58,7 @@ class Assignment():
             return False
     #Wyswietlanie przypisania
     def show(self):
-        print(self.driver.id,"\t-->")
+        print(self.driver.id, "\t-->")
         self.task.show()
         print("\t\tSzacowany czas:\t",datetime.time(int(self.nes_time/60), int(self.nes_time % 60)))
 
