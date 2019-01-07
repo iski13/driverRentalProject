@@ -61,13 +61,15 @@ for i in range(0, len(listOfTasks)):
 
 round = 0
 STOP = 1
-tabooList1 = []    #Lista zabronień kierowców
-tabooDriver = []
-tabooList2 = []     #Lista zabronień przypisań
-tabooList3 = []     #Lista zabronień kombinacji przypisań
-availableDriversTime = []
-availableDriversReal = []
-listOfAssignments = []
+tabooList1 = []             #Lista zabronień kierowców
+tabooDriver = []            #Pomocnicza^^^
+tabooList2 = []             #Lista zabronień przypisań
+tabooList3 = []             #Lista zabronień kombinacji przypisań
+availableDriversTime = []   #Lista dostępnych kierowców według grafiku
+availableDriversReal = []   #Lista dostępnych kierowców według zabronień
+listOfAssignments = []      #Lista przypisań
+listOfArrivalTimes = []
+
 
 while round != STOP :
 
@@ -88,9 +90,9 @@ while round != STOP :
                     availableDriversReal.append(driver)
                     print("Zaczyna")
 
-                if (driver in tabooDriver) and (driver in availableDriversReal) :
-                    availableDriversReal.remove(driver)
-                    print("zabroniony")
+                # if (driver in tabooDriver) and (driver in availableDriversReal) :
+                #     availableDriversReal.remove(driver)
+                #     print("zabroniony")
 
                 if (driver in tabooDriver)==False and (driver in availableDriversTime) and (driver in availableDriversReal)==False :
                     availableDriversReal.append(driver)
@@ -105,32 +107,49 @@ while round != STOP :
 
 
             for task in listOfTasks :
-                if task.start_time.hour == hour and task.start_time.minute == minute :
+                if task.start_time.hour - int(task.dest.dist(Place.Place("1"))/Assignment.std_velocity) == hour and task.start_time.minute - ((task.dest.dist(Place.Place("1"))/Assignment.std_velocity*60) % 60) == minute :
                     # task.show()
                     minDistance = 10**6
-
-                    for driver in availableDriversReal:
-                        if driver.position.dist(task.dest) < minDistance :
-                            minDistance = driver.position.dist(task.dest)
-                            selected = driver
+                    if availableDriversReal:
+                        for driver in availableDriversReal:
+                            if driver.position.dist(task.dest) < minDistance :
+                                minDistance = driver.position.dist(task.dest)
+                                selected = driver
+                    else:
+                        selected = Driver.Driver()
 
                     listOfAssignments.append(Assignment.Assignment(selected,task))
 
-                    if task.tasktype == 1 :
-                        tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].arrivalTime) + 15])
-                        tabooDriver.append(selected)
-                        availableDriversReal.remove(selected)
-                        selected.position = task.dest
-                    else:
+                    # if task.tasktype == 1 :
+                    #     tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].arrivalTime) + 15])
+                    #     tabooDriver.append(selected)
+                    #     availableDriversReal.remove(selected)
+                    #     selected.position = task.dest
+                    # else:
+                    if selected.id != "K!":
                         tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].nes_time)])
                         tabooDriver.append(selected)
                         availableDriversReal.remove(selected)
-                        selected.position = Place.Place(str(1))
+                        selected.position = Place.Place(str(1))     #Po każdym zleceniu powrót do bazy!!! (uproszczenie)
+                    # else:
+
 
                     listOfAssignments[len(listOfAssignments)-1].show()
 
 
+    tabooList3.append(listOfAssignments)
+
+    result = 3*8*listOfWorkers[0].salary
+    for assignment in listOfAssignments :
+        if assignment.driver.position==0 :
+            result = result + assignment.nes_time/60 * assignment.driver.salary
+        # else :
+
+    print(result)
 
 
     availableDriversTime.clear()
+    availableDriversReal.clear()
+    listOfAssignments.clear()
+
     round+=1

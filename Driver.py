@@ -5,7 +5,7 @@ class Driver():
 
 
 
-    def __init__(self, id = 'K0',fulltimer = 1, salary = 14, extra_salary = 21.0, shift = '1', work_time = 8, ifextras = False):  #Tworzenie nowego kierowcy
+    def __init__(self, id = 'K!',fulltimer = 0, salary = 20, extra_salary = 21.0, shift = '1', work_time = 16, ifextras = False):  #Tworzenie nowego kierowcy
         self.id = str(id)
         self.fulltimer = int(fulltimer)
         self.salary = int(salary)
