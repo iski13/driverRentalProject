@@ -16,5 +16,3 @@ def generateTasks():
         file.write(taskStr + "\n")
         file.close()
     return
-
-generateTasks()
