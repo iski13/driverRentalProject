@@ -1,21 +1,21 @@
-import math, ProjectHeader
-
-SpotName = {0: "Baza", 1: "Spot1", 2: "Spot2", 3: "Spot3", 4: "Spot4", 5:"Spot5"}
-SpotCoordinates = {0: [0, 0], 1: [7, 3], 2: [-4, 0], 3: [6, -2], 4: [8, 2], 5: [-1, -5]}
+import math
+import datetime
 
 class Place:
 
-    def __init__(self, spotnumber = 0):                                               #Inicjalizacja nowej lokalizacji
+    def __init__(self, spotnumber = "1"):                                               #Inicjalizacja nowej lokalizacji
+        spotName = {"1": "Baza", "2": "Spot1", "3": "Spot2", "4": "Spot3", "5": "Spot4"}
+        spotCoordinates = {"1": [0, 0], "2": [7, 3], "3": [-4, 0], "4": [6, -2], "5": [8, 2]}
 
-        self.name = SpotName[spotnumber]
-        self.x = SpotCoordinates[spotnumber][0]
-        self.y = SpotCoordinates[spotnumber][1]
+        self.name = spotName[spotnumber]
+        self.x = spotCoordinates[spotnumber][0]
+        self.y = spotCoordinates[spotnumber][1]
 
     def dist(self, other):                                                              #Obliczanie odleglosci
         return math.sqrt(abs(self.x-other.x)**2+abs(self.y-other.y)**2)
 
     def show(self):                                                                     #Prezentacja lokalizacji
-        print("Jesteś w %s o współrzędnych x = %d oraz y = %d" %(self.name, self.x, self.y))
+        print("Jestes w %s o wspolrzednych x = %d oraz y = %d" %(self.name, self.x, self.y))
 
     def show_dist(self, other):                                                         #Wyswietlenie odleglosci
         return print("Między ",self.name," a ", other.name,"jest ", self.dist(other)," km.")

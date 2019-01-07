@@ -72,7 +72,7 @@ while round != STOP :
     for hour in range (8, 24):
         for minute in range (0,60):
 
-            print(hour,minute)
+            #print(hour,minute)
 
 
             for driver in listOfWorkers:
@@ -93,7 +93,7 @@ while round != STOP :
                             minDistance = driver.position.dist(task.dest)
                             selected = driver
                     listOfAssignments.append(Assignment.Assignment(selected,task))
-                    #listOfAssignments[len(listOfAssignments)-1].show()
+                    listOfAssignments[len(listOfAssignments)-1].show()
 
 
 

@@ -49,27 +49,4 @@ class Task():
     #     else:
     #         return False
 
-
-    def is_same_type(self, other):
-        if self.tasktype == other.tasktype :
-            return True
-        else:
-            return False
-
-    def __add__(self, other):                                                                                               # Laczenie taskow w jeden
-        if not self.is_same_type(other) and self == other and 00.15 < abs(self.start_time - other.start_time) < 01.00 :     # Sprawdzenie, czy taski sa roznych typow, czy maja taki sam dest
-                                                                                                                            # i czy roznica miedzy ich czasami jest satysfakcjonujaca
-            if self.tasktype != 2 and other.tasktype != 2 :                                                                 # Sprawdzenie, czy task nie jest juz polaczony
-                self.duration = 2 * BasicErrandTime + abs(self.start_time - other.start_time)
-                self.tasktype = 2
-                self.start_time = self.start_time if self <= other else other.start_time
-                return self
-            else:
-                return self
-
-        else:
-            return self
-
-
-
 #Testy
