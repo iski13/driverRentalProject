@@ -1,8 +1,9 @@
 import Place
 shifts = {"1": 8, "2": 10, "3": 16}
+special = ["K!", 1, 20, 21, "1", 16, False]
+
 
 class Driver():
-
 
 
     def __init__(self, id = 'K!',fulltimer = 0, salary = 20, extra_salary = 21.0, shift = '1', work_time = 16, ifextras = False):  #Tworzenie nowego kierowcy
@@ -22,7 +23,7 @@ class Driver():
         self.ifextras = bool(ifextras)
         self.position = Place.Place()
 
-    def __init__(self, data):               # Inicjalizacja tabelą
+    def __init__(self, data = special):               # Inicjalizacja tabelą
         self.id = str(data[0])
         self.fulltimer = int(data[1])
         self.salary = int(data[2])

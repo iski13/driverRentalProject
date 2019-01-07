@@ -1,4 +1,4 @@
-import os, Driver, Place, Task, Assignment
+import os, Driver, Place, Task, Assignment, datetime
 from generateDrivers import generateDrivers
 from generateTasks import generateTasks
 
@@ -107,7 +107,14 @@ while round != STOP :
 
 
             for task in listOfTasks :
-                if task.start_time.hour - int(task.dest.dist(Place.Place("1"))/Assignment.std_velocity) == hour and task.start_time.minute - ((task.dest.dist(Place.Place("1"))/Assignment.std_velocity*60) % 60) == minute :
+                minutes = int(task.dest.dist(Place.Place("1")) / Assignment.std_velocity*60)    #Czas dojazdu od bazy
+
+                if task.start_time.minute - minutes < 0 :                                       #Deklaracja rzeczywistej godziny rozpoczęcia
+                    taskStart = datetime.time(task.start_time.hour-1, 59+task.start_time.minute - minutes)
+                else:
+                    taskStart = datetime.time(task.start_time.hour,task.start_time.minute-minutes)
+
+                if taskStart.hour == hour and taskStart.minute == minute:
                     # task.show()
                     minDistance = 10**6
                     if availableDriversReal:
@@ -141,8 +148,10 @@ while round != STOP :
 
     result = 3*8*listOfWorkers[0].salary
     for assignment in listOfAssignments :
-        if assignment.driver.position==0 :
+        if assignment.driver.fulltimer == 0 :
             result = result + assignment.nes_time/60 * assignment.driver.salary
+        if assignment.driver.id=="K!" :
+            result = result + assignment.nes_time/60 *assignment.driver.salary
         # else :
 
     print(result)
