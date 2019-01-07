@@ -1,4 +1,4 @@
-import Driver, Task, datetime
+import Driver, Task, datetime, Place
 taskDuration = 15
 std_velocity = 30
 
@@ -8,7 +8,9 @@ class Assignment():
         self.driver = driver
         self.task = task
         self.distance = driver.position.dist(task.dest)
-        self.nes_time = ((driver.position.dist(task.dest)/std_velocity)*2)*60 + taskDuration
+        self.arrivalTime = (self.distance/std_velocity)*60  #Czas dojazdu do miejsca zlecenia w minutach
+        self.returnToBaseTime = task.dest.dist(Place.Place("1"))/std_velocity*60   #Czas powrotu do bazy
+        self.nes_time = self.arrivalTime + self.returnToBaseTime + taskDuration
         self.allowed = True
 
 #    def __init__(self, other):

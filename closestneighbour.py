@@ -62,9 +62,11 @@ for i in range(0, len(listOfTasks)):
 round = 0
 STOP = 1
 tabooList1 = []    #Lista zabronień kierowców
+tabooDriver = []
 tabooList2 = []     #Lista zabronień przypisań
 tabooList3 = []     #Lista zabronień kombinacji przypisań
-availableDrivers = []
+availableDriversTime = []
+availableDriversReal = []
 listOfAssignments = []
 
 while round != STOP :
@@ -78,14 +80,28 @@ while round != STOP :
                 driver[1]-=1
                 if driver[1] == 0 :
                     tabooList1.remove(driver)
+                    tabooDriver.remove(driver[0])
 
             for driver in listOfWorkers:
                 if driver.shiftH == hour and driver.shiftM == minute :
-                    availableDrivers.append(driver)
-                    # driver.show()
-                if driver.shiftH+driver.work_time == hour and driver.shiftM+1 == minute :
-                    availableDrivers.remove(driver)
-                    # driver.show()
+                    availableDriversTime.append(driver)
+                    availableDriversReal.append(driver)
+                    print("Zaczyna")
+
+                if (driver in tabooDriver) and (driver in availableDriversReal) :
+                    availableDriversReal.remove(driver)
+                    print("zabroniony")
+
+                if (driver in tabooDriver)==False and (driver in availableDriversTime) and (driver in availableDriversReal)==False :
+                    availableDriversReal.append(driver)
+                    print("Odzabroniony")
+
+                if ((driver.shiftH+driver.work_time == hour) and (driver.shiftM == minute)) and (driver in availableDriversTime) :
+                    availableDriversTime.remove(driver)
+                    if driver in availableDriversReal :
+                        availableDriversReal.remove(driver)
+                    print("zakonczyl")
+
 
 
             for task in listOfTasks :
@@ -93,7 +109,7 @@ while round != STOP :
                     # task.show()
                     minDistance = 10**6
 
-                    for driver in availableDrivers :
+                    for driver in availableDriversReal:
                         if driver.position.dist(task.dest) < minDistance :
                             minDistance = driver.position.dist(task.dest)
                             selected = driver
@@ -101,10 +117,14 @@ while round != STOP :
                     listOfAssignments.append(Assignment.Assignment(selected,task))
 
                     if task.tasktype == 1 :
-                        tabooList1.append([selected, int((listOfAssignments[len(listOfAssignments)-1].nes_time-15)/2) + 15])
+                        tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].arrivalTime) + 15])
+                        tabooDriver.append(selected)
+                        availableDriversReal.remove(selected)
                         selected.position = task.dest
                     else:
                         tabooList1.append([selected, int(listOfAssignments[len(listOfAssignments)-1].nes_time)])
+                        tabooDriver.append(selected)
+                        availableDriversReal.remove(selected)
                         selected.position = Place.Place(str(1))
 
                     listOfAssignments[len(listOfAssignments)-1].show()
@@ -112,5 +132,5 @@ while round != STOP :
 
 
 
-    availableDrivers.clear()
+    availableDriversTime.clear()
     round+=1
