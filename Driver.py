@@ -40,6 +40,12 @@ class Driver():
         self.ifextras = int(data[6])
         self.position = Place.Place()
 
+    def __eq__(self, other):
+        if self.id == other.id:
+            return True
+        else:
+            return False
+
 
    # def is_fulltimer(self):                                                        #Sprawdzanie etatu
    #     if self.fulltimer == True:

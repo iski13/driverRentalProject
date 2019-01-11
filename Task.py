@@ -41,11 +41,11 @@ class Task():
             return True
         else:
             return False
-    # def __eq__(self, other):            #Operator '=='
-    #     if self.start_time == other.start_time:
-    #         return True
-    #     else:
-    #         return False
+    def __eq__(self, other):            #Operator '=='
+        if self.start_time == other.start_time and self.dest == other.dest and self.tasktype == other.tasktype:
+            return True
+        else:
+            return False
 
 
 #Testy
