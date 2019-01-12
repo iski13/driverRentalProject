@@ -3,8 +3,8 @@ from generateDrivers import generateDrivers
 from generateTasks import generateTasks
 
 #Generacja kierowców i zadań
-# generateDrivers()
-# generateTasks()
+generateDrivers()
+generateTasks()
 
 #-----------------------------------------------
 #Wczytanie z pliku do listy obiektow typu Driver
@@ -66,19 +66,26 @@ tabooDriver = []            #Pomocnicza^^^
 
 tabooList2 = []             #Lista zabronień przypisań
 tabooAssignments = []       #Pomocnicza^^^
+period2 = 2                 #Okres zabronień przypisania
 
-tabooList3 = []             #Lista zabronień kombinacji przypisań
-tabooCombinations = []      #Pomocnicza^^^
+tabooList3 = []             #Lista zabronień kombinacji przypisań pamięć długotrwała
 
 availableDriversTime = []   #Lista dostępnych kierowców według grafiku
 availableDriversReal = []   #Lista dostępnych kierowców według zabronień
 
 listOfAssignments = []      #Lista przypisań
 
-period2 = 1
+
 period3 = 1
 helpDriver = Driver.Driver()
 data = []
+
+#Wskaźniki jakości rozwiązania
+numberOfHelp = 0
+percentageK0 = 0.0
+percentageK1 = 0.0
+percentageK2 = 0.0
+driversAfterHours = 0
 
 while round != STOP :
     for assignment in tabooList2:
@@ -95,10 +102,12 @@ while round != STOP :
             # print(hour,minute)
 
             for driver in tabooList1 :
-                driver[1]-=1
-                if driver[1] == 0 :
+                driver[1] -= 1
+                if driver[1] == 0:
                     tabooList1.remove(driver)
                     tabooDriver.remove(driver[0])
+                    if (hour > driver[0].shiftH + driver[0].work_time) or (hour == driver[0].shiftH + driver[0].work_time and minute > driver[0].shiftM):
+                        driversAfterHours += 1
 
             for driver in listOfWorkers:
                 if driver.shiftH == hour and driver.shiftM == minute :
@@ -131,9 +140,9 @@ while round != STOP :
                     taskStart = datetime.time(task.start_time.hour,task.start_time.minute-minutes)
                 if taskStart.hour == hour and taskStart.minute == minute:
                     # task.show()
+
+
                     minDistance = 10**6
-
-
                     if availableDriversReal:
                         for driver in availableDriversReal:
                             # if tabooAssignments:
@@ -148,6 +157,8 @@ while round != STOP :
                         selected = helpDriver
 
                     listOfAssignments.append(Assignment.Assignment(selected,task))
+                    if selected == helpDriver:
+                        numberOfHelp += 1
                     tabooList2.append([listOfAssignments[len(listOfAssignments)-1],period2])    #Dodanie przypisanie do listy zabronień z okresem
                     tabooAssignments.append(listOfAssignments[len(listOfAssignments) - 1])
 
@@ -169,25 +180,47 @@ while round != STOP :
                     # listOfAssignments[len(listOfAssignments)-1].show()
 
 
-    tabooList3.append([listOfAssignments, period3])        #Dodanie kombinacji przyporządkowań do listy zabronień z okresem
+    tabooList3.append(listOfAssignments)        #Dodanie kombinacji przyporządkowań do listy zabronień z okresem
 
     result = 3*8*listOfWorkers[0].salary
     for assignment in listOfAssignments :
-        if assignment.driver.fulltimer == 0 :
+        if assignment.driver.fulltimer == 1:
+            if assignment.driver.id == "K0":
+                percentageK0 += assignment.nes_time/60
+            elif assignment.driver.id == "K1":
+                percentageK1 += assignment.nes_time/60
+            else:
+                percentageK2 += assignment.nes_time/60
+        else:
             result = result + assignment.nes_time/60 * assignment.driver.salary
         if assignment.driver.id=="K!" :
             result = result + assignment.nes_time/60 *assignment.driver.salary
         # else :
+    percentageK0 = percentageK0/8*100
+    percentageK1 = percentageK1/8*100
+    percentageK2 = percentageK2/8*100
+    goalFunction = result
 
-    data.append(str(result))
+    data.append([str(goalFunction), str(numberOfHelp), str(percentageK0), str(percentageK1), str(percentageK2), str(driversAfterHours)])
 
+    #Czyścimy!!!!
     availableDriversTime.clear()
     availableDriversReal.clear()
     listOfAssignments.clear()
     tabooList1.clear()
     tabooDriver.clear()
-
+    percentageK0 = 0
+    percentageK1 = 0
+    percentageK2 = 0
+    numberOfHelp = 0
+    driversAfterHours = 0
     round += 1
+
+print(data)
+data1 = []
+for data in data:
+    data1.append('\t'.join(data))
+data = data1
 print(data)
 path = os.getcwd()                                          #Ustawienie ściezki do pliku na bieżący folder
 path = os.path.join(path, 'results.csv')
