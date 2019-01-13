@@ -66,7 +66,7 @@ for i in range(0, len(listOfTasks)):
 #ALGORYTM
 
 round = 0
-STOP = 200
+STOP = 10
 
 tabooList1 = []
 tabooDriver = []
