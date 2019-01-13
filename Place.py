@@ -11,6 +11,13 @@ class Place:
         self.name = spotName[spotnumber]
         self.x = spotCoordinates[spotnumber][0]
         self.y = spotCoordinates[spotnumber][1]
+        self.spotNumber = spotnumber
+
+    def __eq__(self, other):
+        if self.name == other.name:
+            return True
+        else:
+            return False
 
     def dist(self, other):                                                     #Obliczanie odleglosci
         return math.sqrt((self.x-other.x)**2+(self.y-other.y)**2)

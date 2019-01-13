@@ -10,7 +10,10 @@ class Assignment():
         self.distance = driver.position.dist(task.dest)
         self.arrivalTime = (self.distance/std_velocity)*60  #Czas dojazdu do miejsca zlecenia w minutach
         self.returnToBaseTime = task.dest.dist(Place.Place("1"))/std_velocity*60   #Czas powrotu do bazy
-        self.nes_time = self.arrivalTime + self.returnToBaseTime + taskDuration
+        if task.tasktype == 2:
+            self.nes_time = self.arrivalTime + self.returnToBaseTime + 2*taskDuration + (task.start_time2.hour - task.start_time.hour)*60 + task.start_time2.minute - task.start_time.minute
+        else:
+            self.nes_time = self.arrivalTime + self.returnToBaseTime + taskDuration
         self.allowed = True
 
 #    def __init__(self, other):

@@ -2,21 +2,27 @@ import datetime, Place
 
 class Task():
 
-    def __init__(self, start_timeH=18, start_timeM=0, tasktype = 1, dest = 0):            #Inicjalizacja zadania
+    def __init__(self, start_timeH=18, start_timeM=0, tasktype = 1, dest = "0", start_timeH2=1, start_timeM2=1):            #Inicjalizacja zadania
         self.start_time = datetime.time(int(start_timeH), int(start_timeM))
         self.tasktype = int(tasktype)
         self.dest = Place.Place(dest)
+        if self.tasktype == 2:
+            self.start_time2 = datetime.time(int(start_timeH2), int(start_timeM2))
 
-    def __init__(self, data):                                                             #Inicjalizacja zadania przez listę danych
-        self.start_time = datetime.time(int(data[0]), int(data[1]))
-        self.tasktype = int(data[2])
-        self.dest = Place.Place(data[3])
+    # def __init__(self, data, start_timeH2=1, start_timeM2=1):                                                             #Inicjalizacja zadania przez listę danych
+    #     self.start_time = datetime.time(int(data[0]), int(data[1]))
+    #     self.tasktype = int(data[2])
+    #     self.dest = Place.Place(data[3])
+    #     if self.tasktype == 2:
+    #         self.start_time2 = datetime.time(int(start_timeH2), int(start_timeM2))
 
     def show(self):                                                                 #Prezentacja zadania przez print
         if self.tasktype == 1:
             return print("Dostarczenie na\t",self.start_time,"\tz\t",self.dest.name)
-        else:
+        elif self.tasktype == 0:
             return print("Odebranie o\t\t",self.start_time,"\tz\t",self.dest.name)
+        else:
+            return print("Dostarczenie na\t",self.start_time, "\ti odbiór o\t", self.start_time2, "\tz\t",self.dest.name)
 
     def __gt__(self, other):            #Operator '>'
         if self.start_time > other.start_time :
