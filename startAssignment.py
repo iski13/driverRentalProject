@@ -16,12 +16,12 @@ def startAssignment(drivers, tasks, helpDriver):
                 if driver[1] == 0:
                     tabooList1.remove(driver)
                     tabooDriver.remove(driver[0])
-                    if (hour > driver[0].shiftH + driver[0].work_time) or (hour == driver[0].shiftH + driver[0].work_time and minute > driver[0].shiftM):
+                    if (hour > driver[0].shift.hour + driver[0].work_time) or (hour == driver[0].shift.hour + driver[0].work_time and minute > driver[0].shift.minute):
                         driversAfterHours += 1
 
             for driver in drivers:
                 if driver.fulltimer == 0:
-                    if driver.shiftH == hour and driver.shiftM == minute :
+                    if driver.shift.hour == hour and driver.shift.minute == minute :
                         availableDriversTime.append(driver)
                         availableDriversReal.append(driver)
                         #print("Zaczyna")
@@ -30,7 +30,7 @@ def startAssignment(drivers, tasks, helpDriver):
                         availableDriversReal.append(driver)
                         # print("Odzabroniony")
 
-                    if ((driver.shiftH+driver.work_time == hour) and (driver.shiftM == minute)) and (driver in availableDriversTime) :
+                    if ((driver.shift.hour+driver.work_time == hour) and (driver.shift.minute == minute)) and (driver in availableDriversTime) :
                         availableDriversTime.remove(driver)
                         if driver in availableDriversReal :
                             availableDriversReal.remove(driver)

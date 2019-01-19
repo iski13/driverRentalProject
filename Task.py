@@ -16,6 +16,12 @@ class Task():
     #     if self.tasktype == 2:
     #         self.start_time2 = datetime.time(int(start_timeH2), int(start_timeM2))
 
+    def strTask(self):
+        if self.tasktype == 1:
+            string = "Dostarczenie na "+ str(self.start_time)+" z "+str(self.dest.name)
+        elif self.tasktype == 0:
+            string = "Odebranie o "+str(self.start_time)+" z "+str(self.dest.name)
+        return string
     def show(self):                                                                 #Prezentacja zadania przez print
         if self.tasktype == 1:
             return print("Dostarczenie na\t",self.start_time,"\tz\t",self.dest.name)
@@ -52,6 +58,3 @@ class Task():
             return True
         else:
             return False
-
-
-#Testy
