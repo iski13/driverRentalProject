@@ -2,6 +2,8 @@ import os, Driver, Place, Task, Assignment, datetime
 from generateDrivers import generateDrivers
 from generateTasks import generateTasks
 from startAssignment import startAssignment
+import matplotlib.pyplot as plotter
+import numpy
 
 #Generacja kierowców i zadań
 generateDrivers()
@@ -87,6 +89,11 @@ percentageK0 = 0.0
 percentageK1 = 0.0
 percentageK2 = 0.0
 driversAfterHours = 0
+summaryCost = []
+numbersOfHelpers = []
+percentagesK0 = []
+percentagesK1 = []
+percentagesK2 = []
 
 startSolution = startAssignment(listOfWorkers,listOfTasks, helpDriver)
 
@@ -210,11 +217,16 @@ while round != STOP :
     goalFunction = result
 
     data.append([str(goalFunction), str(numberOfHelp), str(percentageK0), str(percentageK1), str(percentageK2), str(driversAfterHours)])
+    summaryCost.append(goalFunction)
+    numbersOfHelpers.append(numberOfHelp)
+    percentagesK0.append(percentageK0)
+    percentagesK1.append(percentageK1)
+    percentagesK2.append(percentageK2)
 
     #Czyścimy!!!!
     availableDriversTime.clear()
     availableDriversReal.clear()
-    listOfAssignments.clear()
+    listOfAssignments = []
     tabooList1.clear()
     tabooDriver.clear()
     percentageK0 = 0
@@ -223,6 +235,35 @@ while round != STOP :
     numberOfHelp = 0
     driversAfterHours = 0
     round += 1
+
+#Rysowanie wykresów ilustrujących
+x = numpy.arange(1,STOP+1,1)
+plotter.plot(x,summaryCost)
+plotter.grid(True)
+plotter.show()
+[f,[ax1, ax2]] = plotter.subplots(2,1)
+ax1.plot(percentagesK0)
+ax1.plot(percentagesK1)
+ax1.plot(percentagesK2)
+ax2.plot(numbersOfHelpers)
+plotter.show()
+
+#Zapis kombinacji do pliku:
+text = ''
+i=1
+combinations = []
+lista = []
+for element in tabooList3:
+    for assignment in element:
+        lista.append(assignment.driver.id +' => '+ assignment.task.strTask())
+    combinations.append('Rozwiązanie ' + str(i) + '\n' + '\n'.join(lista) + '\n\n')
+    i += 1
+    lista = []
+path = os.getcwd()
+path = os.path.join(path, 'fileOfCombinations.txt')
+combinationsStr = '\n'.join(combinations)
+with open(path,'w') as file:
+    file.write(combinationsStr)
 
 print(data)
 data1 = []

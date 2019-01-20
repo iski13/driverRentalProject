@@ -3,6 +3,8 @@ from generateDrivers import generateDrivers
 from generateTasks import generateTasks
 from startAssignment import startAssignment
 from sortFunctions import sortShort, sortLong
+import matplotlib.pyplot as plotter
+import numpy
 
 #Generacja kierowców i zadań
 generateDrivers()
@@ -75,7 +77,7 @@ for i in range(0, len(listOfTasks)):
 
 
 round = 0
-STOP = 1
+STOP = 10
 tabooList1 = []            #Lista zabronień kierowców
 tabooDriver = []            #Pomocnicza^^^
 
@@ -105,6 +107,11 @@ percentageK1 = 0.0
 percentageK2 = 0.0
 driversAfterHours = 0
 
+summaryCost = []
+numbersOfHelpers = []
+percentagesK0 = []
+percentagesK1 = []
+percentagesK2 = []
 startSolution = startAssignment(listOfWorkers, listOfTasks, helpDriver)
 
 # for assignment in startSolution:
@@ -139,7 +146,10 @@ while round != STOP:
                         tabooAssignments.append(Assignment.Assignment(selected, task))
                         listOfAssignments.append(Assignment.Assignment(selected, task))
                         minutes = task.start_time.hour*60 + task.start_time.minute + listOfAssignments[len(listOfAssignments)-1].nes_time
-                        endOfTask = datetime.time(int(minutes/60), int(minutes) % 60)
+                        if int(minutes/60)>=24:
+                            endOfTask = datetime.time(23,59)
+                        else:
+                            endOfTask = datetime.time(int(minutes/60), int(minutes) % 60)
                         ifAssigned = 1
                         # print(endOfTask)
                         tabooList1.append([driver, task.start_time, endOfTask])
@@ -191,6 +201,12 @@ while round != STOP:
 
     data.append([str(goalFunction), str(numberOfHelp), str(percentageK0), str(percentageK1), str(percentageK2),
                  str(driversAfterHours)])
+    summaryCost.append(goalFunction)
+    numbersOfHelpers.append(numberOfHelp)
+    percentagesK0.append(percentageK0)
+    percentagesK1.append(percentageK1)
+    percentagesK2.append(percentageK2)
+
     # Czyścimy!!!!
     availableDriversTime.clear()
     availableDriversReal.clear()
@@ -203,22 +219,42 @@ while round != STOP:
     numberOfHelp = 0
     driversAfterHours = 0
     round += 1
-print(tabooList3)
+
+#Rysowanie wykresów ilustrujących
+x = numpy.arange(1,STOP+1,1)
+plotter.plot(x,summaryCost)
+plotter.grid(True)
+plotter.show()
+[f,[ax1, ax2]] = plotter.subplots(2,1)
+ax1.plot(percentagesK0)
+ax1.plot(percentagesK1)
+ax1.plot(percentagesK2)
+ax2.plot(numbersOfHelpers)
+plotter.show()
+
+#Zapis kombinacji do pliku:
+text = ''
+i=1
 for element in tabooList3:
     for assignment in element:
         lista.append(assignment.driver.id +' => '+ assignment.task.strTask())
+    combinations.append('Rozwiązanie ' + str(i) + '\n' + '\n'.join(lista) + '\n\n')
+    i += 1
+    lista = []
+path = os.getcwd()
+path = os.path.join(path, 'fileOfCombinations.txt')
+combinationsStr = '\n'.join(combinations)
+with open(path,'w') as file:
+    file.write(combinationsStr)
 
-    print(lista)
-combinations = lista.join('\n')
-print(combinations)
 # print(data)
 data1 = []
 for data in data:
     data1.append('\t'.join(data))
 data = data1
-print(data)
 path = os.getcwd()                                          #Ustawienie ściezki do pliku na bieżący folder
 path = os.path.join(path, 'results.csv')
 resultStr = '\n'.join(data)
 with open(path, 'w') as file:
     file.write(resultStr)
+
