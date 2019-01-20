@@ -224,16 +224,48 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
         driversAfterHours = 0
         round += 1
 
-    #Rysowanie wykresów ilustrujących
-    x = numpy.arange(1,STOP+1,1)
-    plotter.plot(x,summaryCost)
+    minimum = 10 ** 6
+    for i in range(0, len(summaryCost)):
+        if summaryCost[i] < minimum:
+            minimum = summaryCost[i]
+            index = i
+    minimumList = []
+    for i in range(0, len(summaryCost)):
+        minimumList.append(minimum)
+
+    # Rysowanie wykresów ilustrujących
+    x = numpy.arange(1, STOP + 1, 1)
+
+    fig1 = plotter.figure()
+    ax = fig1.add_subplot(111)
+    ax.plot(x, summaryCost)
+    ax.plot(x, minimumList)
+    ax.set_xlim(1, STOP)
+    ax.set_xscale("linear")
+    ax.set_title("Wykres funkcji celu")
+    plotter.xlabel("Numer rozwiązania")
+    plotter.ylabel("Koszt rozwiązania [zł]")
     plotter.grid(True)
     plotter.show()
-    [f,[ax1, ax2]] = plotter.subplots(2,1)
-    ax1.plot(percentagesK0)
-    ax1.plot(percentagesK1)
-    ax1.plot(percentagesK2)
-    ax2.plot(numbersOfHelpers)
+    fig2 = plotter.figure()
+    ax1 = fig2.add_subplot(211)
+    ax2 = fig2.add_subplot(212)
+    # [f,[ax1, ax2]] = plotter.subplots(2,1)
+    line1, = ax1.plot(x, percentagesK0)
+    line2, = ax1.plot(x, percentagesK1)
+    line3, = ax1.plot(x, percentagesK2)
+    ax1.set_xlim(1, STOP)
+    ax1.set_title("Wykres wypełnienia czasu pracy kierowców etatowych")
+    ax1.set_xlabel("Numer iteracji")
+    ax1.legend((line1, line2, line3), ("Kierowca K0", "Kierowca K1", "Kierowca K2"))
+    ax1.set_ylabel("Procentowa wartość wypełnienia")
+    ax1.grid(True)
+    ax2.plot(x, numbersOfHelpers)
+    ax2.set_xlim(1, STOP)
+    ax2.set_title("Wykres liczby nieobsłużonych zleceń")
+    ax2.set_xlabel("Numer iteracji")
+    ax2.set_ylabel("Liczba nieobsłużonych zleceń")
+    ax2.grid(True)
     plotter.show()
 
     #Zapis kombinacji do pliku:

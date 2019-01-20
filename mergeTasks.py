@@ -21,7 +21,7 @@ def mergeTasks(listOfTasks):
             for j in range(0, len(listOfTasks)):
                 if listOfTasks[i].tasktype == 1 and listOfTasks[j].tasktype == 0 and listOfTasks[i].dest == listOfTasks[j].dest:
                     if (((listOfTasks[j].start_time.hour - listOfTasks[i].start_time.hour)*60 + (listOfTasks[j].start_time.minute - listOfTasks[i].start_time.minute)) <= 60) and (((listOfTasks[j].start_time.hour - listOfTasks[i].start_time.hour)*60 + (listOfTasks[j].start_time.minute - listOfTasks[i].start_time.minute)) > 15):
-                        if not listOfTasks[i] in merged:
+                        if not listOfTasks[i] in merged and not listOfTasks[j] in merged:
                             newTask = Task.Task(listOfTasks[i].start_time.hour, listOfTasks[i].start_time.minute, 2, listOfTasks[i].dest.spotNumber, listOfTasks[j].start_time.hour, listOfTasks[j].start_time.minute)
                             mergedListOfTasks.append(newTask)
                             merged.append(listOfTasks[i])
