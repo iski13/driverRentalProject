@@ -32,3 +32,4 @@ elif typeOfNeighbours == "5":
     shortestTaskNeighbour.shortestTaskFirstNeighbours(iterations, tabooPeriod, 0)
 else:
     print("Nieprawidłowy typ zlecenia!!!")
+

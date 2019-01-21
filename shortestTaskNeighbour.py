@@ -71,7 +71,7 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
     if short == 1:
         listOfTasks = sortShort(listOfTasks)
     else:
-        listOfTasks = sortLong()
+        listOfTasks = sortLong(listOfTasks)
 
     for i in range(0, len(listOfTasks)):
         listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
@@ -129,7 +129,8 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
                 tabooList2.remove(assignment)
                 tabooAssignments.remove(assignment[0])
                 continue
-            assignment[1] -= 1
+            assignment[1] = int(assignment[1]) - 1
+            assignment[1] = str(assignment[1])
             #assignment[0].show()
 
         for task in listOfTasks:
