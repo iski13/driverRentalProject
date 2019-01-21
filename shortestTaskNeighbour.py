@@ -71,7 +71,7 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
     if short == 1:
         listOfTasks = sortShort(listOfTasks)
     else:
-        listOfTasks = sortLong()
+        listOfTasks = sortLong(listOfTasks)
 
     for i in range(0, len(listOfTasks)):
         listOfTasks[i].show()                                   #Sortowanie zleceń według godziny
@@ -81,13 +81,13 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
 
 
     round = 0
-    STOP = iterations
+    STOP = int(iterations)
     tabooList1 = []            #Lista zabronień kierowców
     tabooDriver = []            #Pomocnicza^^^
 
     tabooList2 = []             #Lista zabronień przypisań
     tabooAssignments = []       #Pomocnicza^^^
-    period2 = tabooPeriod                 #Okres zabronień przypisania
+    period2 = int(tabooPeriod)                 #Okres zabronień przypisania
 
     tabooList3 = []             #Lista zabronień kombinacji przypisań pamięć długotrwała
 
