@@ -81,13 +81,13 @@ def shortestTaskFirstNeighbours(iterations, tabooPeriod, short):
 
 
     round = 0
-    STOP = iterations
+    STOP = int(iterations)
     tabooList1 = []            #Lista zabronień kierowców
     tabooDriver = []            #Pomocnicza^^^
 
     tabooList2 = []             #Lista zabronień przypisań
     tabooAssignments = []       #Pomocnicza^^^
-    period2 = tabooPeriod                 #Okres zabronień przypisania
+    period2 = int(tabooPeriod)                 #Okres zabronień przypisania
 
     tabooList3 = []             #Lista zabronień kombinacji przypisań pamięć długotrwała
 
